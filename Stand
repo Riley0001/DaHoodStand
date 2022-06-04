@@ -1,4 +1,4 @@
--- simple stand by zxro, includes Stefanuk12's open source anticheat bypass --
+-- open source anticheat bypass --
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Stefanuk12/ROBLOX/master/Games/Da%20Hood/AntiCheatBypass.lua"))()
 
