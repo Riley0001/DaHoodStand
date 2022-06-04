@@ -1,0 +1,261 @@
+-- simple stand by zxro, includes Stefanuk12's open source anticheat bypass --
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Stefanuk12/ROBLOX/master/Games/Da%20Hood/AntiCheatBypass.lua"))()
+
+--[[ For any template shares, please make sure to include a list of the abilities inside the template as follows :
+Summon stand = Summon! /e s
+Desummon stand = Vanish! /e v
+Rejoin! / Rejoins
+Leave! / Leaves
+Barrage! / barrages infront of you
+Aura! / goes below u and begins hitting in a circle
+Bring user / Brings person
+Kill user / Loopkills the person
+Stab! / kills nearby players
+Save! / Saves the owner
+Mimic! / mimics the owner's movements [Block, punch, etc]
+]]--
+--/ 
+getgenv().Settings = {
+    ['Made By rileyisfit#2222'] = {
+        CHECK = {OWNER = "MelissaPotts6", STAND = "TraceySchwartz6"}, --/ Do not use UserId (Always execute script on stand account).
+        FPS = 100, --/ Will control FPS can improve the overall performance on both instances when set to lower.
+        PERFORMANCE = false, --/ If set to true it'll significantly improve your overall FPS if you're struggling with performance.
+        NOCLIP = {SynapseX = true, Offset = -3.05}, --/ Offset will control the height of normal noclip (keep unchanged unless you're using titan with a big character / SynapseX option).
+        FACELESS = true, --/ If you want to remove your face.
+        TRAILS = true, --/ If you want to remove the white trail when charge attacking.
+        LEGS = false, --/ If set to true it'll remove your legs.
+        ANTIFLING = false, --/ If set to true you can't get flinged nor can you fling anyone.
+        TELEPORTMAIN = false, --/ Teleports to the stand user
+        RANGE = 50, --/ Controls the melee reach range (50 is max).
+        TITAN = {ENABLED = false , GODV3 = false}, --/ If enabled you will become a titan stand, if you enable god you need to execute before load for it to work (also can be used with titan disabled).
+        FOLLOWANIM = {true, ID = 3541044388, SPEED = 0.25}, --/ If set to true will play the desired animation when moving (DEFAULT ANIMATION IS SUGGESTED), SPEED will control the speed (Recommended is 0.25).
+    }
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JOJOGIO/STAND-FRAMEWORK/main/v.1.0.5"))()
+
+CreateAction("Summoned", function() 
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(1,1.85,2.5)
+end)    
+
+CreateAction("Barrage", function()
+    if STAND.Character.HumanoidRootPart then
+        if OWNER.Character.HumanoidRootPart then
+            STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,0.85,-4.85)
+            if STAND.Character:FindFirstChild("Combat") then
+                Hit(false)
+            else
+                Equip("Combat")
+                Hit(false)
+            end
+        end
+    end
+end)
+
+CreateAction("Aura", function() 
+    wait()
+    if OWNER.Character.Humanoid.FloorMaterial == Enum.Material.Air then 
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-20,0)
+        Hit(false)
+    elseif OWNER.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0 + math.random(-8.5,8.5),-10,0 + math.random(-8.5,8.5))
+        Hit(false)
+    else
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-25,0)
+    end
+end)   
+
+--/---------------------------------------------------------------------------------------------\--/ Create & CreateTargetAbility goes below this :
+Create("Summon!", function()
+    pcall(function()
+        game:GetService("RunService"):UnbindFromRenderStep("TARGETKILL")
+		game:GetService("RunService"):UnbindFromRenderStep("GRAB")
+        Stop()
+    end)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.07)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.07)
+    Stand.Action = "Summoned"
+end)
+
+Create("Vanish!", function()
+    pcall(function()
+        Stop()
+    end)
+    Stand.Action = "" 
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.09)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-100,0)
+end)
+
+Create("/e s", function()
+    pcall(function()
+        game:GetService("RunService"):UnbindFromRenderStep("TARGETKILL")
+		game:GetService("RunService"):UnbindFromRenderStep("GRAB")
+        Stop()
+    end)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.05)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.05)
+    Stand.Action = "Summoned"
+end)
+
+Create("/e v", function()
+    pcall(function()
+        Stop()
+    end)
+    Stand.Action = "" 
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-0.7,1.45)
+    wait(0.075)
+    STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(0,-100,0)
+end)
+
+Create("Rejoin!", function()
+    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, STAND)
+end)
+
+
+CreateTargetAbility("Bring", function()
+    local Target = Stand.Target
+    if Target then
+    Stand.Action = ""
+    game:GetService("RunService"):BindToRenderStep("GRAB", -1 , function()
+    if Target and Target.Character and Target.Character:FindFirstChild("BodyEffects") and Target.Character.BodyEffects:FindFirstChild("K.O") then
+    if Target.Character.BodyEffects["K.O"].Value == true then
+        STAND.Character.HumanoidRootPart.CFrame = CFrame.new(Target.Character.UpperTorso.Position.X , Target.Character.UpperTorso.Position.Y + 1, Target.Character.UpperTorso.Position.Z )
+        if STAND.Character.BodyEffects["Grabbed"].Value == nil then
+            game:GetService("VirtualInputManager"):SendKeyEvent(true,"G",false,game)
+        end
+    end
+    if Target.Character.BodyEffects["K.O"].Value == false then
+        STAND.Character.HumanoidRootPart.CFrame = Target.Character.HumanoidRootPart.CFrame*CFrame.new(0,-6,0)
+            if STAND.Character:FindFirstChildWhichIsA("Tool") then
+                Hit(true)
+            else
+                Equip("Combat")
+                Hit(true)
+            end
+        end
+            if Target == nil or STAND.Character.BodyEffects["Grabbed"].Value ~= nil then
+                game:GetService("RunService"):UnbindFromRenderStep("GRAB")
+                Stand.Action = "Summoned"
+            end
+ 	       end
+		end)
+	end
+end)
+
+CreateTargetAbility("Kill", function()
+    local Target = Stand.Target
+    if Target then
+    Stand.Action = ""
+    game:GetService("RunService"):BindToRenderStep("TARGETKILL", -1 , function()
+    if Target and Target.Character and Target.Character:FindFirstChild("BodyEffects") and Target.Character.BodyEffects:FindFirstChild("K.O") then
+        if Target.Character.BodyEffects["K.O"].Value == true then
+			STAND.Character.HumanoidRootPart.CFrame = CFrame.new(Target.Character.UpperTorso.Position.X , Target.Character.UpperTorso.Position.Y + 1, Target.Character.UpperTorso.Position.Z )
+			game:GetService("ReplicatedStorage").MainEvent:FireServer("Stomp")
+        else
+            STAND.Character.HumanoidRootPart.CFrame = Target.Character.HumanoidRootPart.CFrame*CFrame.new(0,-10,0)
+                if STAND.Character:FindFirstChildWhichIsA("Tool") then
+                    Hit(true)
+                else
+                    Equip("Combat")
+                    Hit(true)
+                end
+             end
+          end
+  	  end)
+	end
+end)
+
+
+CreateAction("aura1", function() 
+Target = GetNearest()
+Range = 25
+local x = math.random(-5,5)
+local b = (OWNER.Character.UpperTorso.Position - Target.Character.UpperTorso.Position).Magnitude
+    if Target and Target.Character and Target.Character:FindFirstChild("UpperTorso") and b < Range and Target.Character:FindFirstChild("BodyEffects") and Target.Character.BodyEffects:FindFirstChild("Defense") and Target.Character.BodyEffects:FindFirstChild("K.O") and Target.Character.BodyEffects.Attacking.Value == false and Target.Character.BodyEffects["K.O"].Value == false then
+        STAND.Character.HumanoidRootPart.CFrame = CFrame.new(Target.Character.UpperTorso.Position.X + x, Target.Character.UpperTorso.Position.Y + x, Target.Character.UpperTorso.Position.Z + x)
+        Hit(true) -- if true will charge
+    else
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(1,1.85,2.5)
+    end
+end)  
+
+----Save function work in process
+CreateAction("Save", function()
+       Stand.Action = "" 
+       repeat wait()
+        if OWNER.Character.BodyEffects["K.O"].Value == false then
+            STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.UpperTorso.CFrame
+        elseif OWNER.Character.BodyEffects["K.O"].Value == true then 
+            wait(0.5)
+            STAND.Character.HumanoidRootPart.CFrame = CFrame.new(OWNER.Character.UpperTorso.Position.X , OWNER.Character.UpperTorso.Position.Y +0.5, OWNER.Character.UpperTorso.Position.Z )
+            wait(0.5)
+            if STAND.Character.BodyEffects["Grabbed"].Value == nil then
+                wait(0.9)
+                game:GetService("ReplicatedStorage").MainEvent:FireServer("Grabbing", true)
+            end
+        end
+        until Stand.Action == "Summoned" or Target == nil or not Target.Character.BodyEffects:FindFirstChild("K.O") or not Target.Character.BodyEffects:FindFirstChild("Defense") or STAND.Character.BodyEffects["Grabbed"].Value ~= nil 
+        STAND.Character.HumanoidRootPart.CFrame = CFrame.new(-205.789703, 160.413025, 1.48631835)
+        wait(1)
+        game:GetService("ReplicatedStorage").MainEvent:FireServer("Grabbing", false)
+        wait(2)
+        Stand.Action = "Summoned"
+        end)
+
+
+
+
+CreateAction("Mimic", function() 
+    local Block = OWNER.Character.BodyEffects:FindFirstChild('Block')
+    if OWNER.Character.BodyEffects.Attacking.Value == true then
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-6)
+        if STAND.Character:FindFirstChild('Combat') then
+            STAND.Character:FindFirstChild('Combat'):Activate()
+        else
+            STAND.Backpack:FindFirstChild('Combat').Parent = STAND.Character
+        end
+    elseif Block then
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-6)
+        if not STAND.Character.BodyEffects:FindFirstChild('Block') then
+            game:GetService("ReplicatedStorage").MainEvent:FireServer("Block", true)
+        end
+    else
+        if STAND.Character.BodyEffects:FindFirstChild('Block') then
+            STAND.Character.BodyEffects:FindFirstChild('Block'):Destroy()
+        end
+        STAND.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame * CFrame.new(1,1.85,2.5)
+    end
+end)
+
+
+
+--/---------------------------------------------------------------------------------------------\--/ Create & CreateTargetAbility & CreateLoop goes below this :
+Create("Mimic!", function() 
+    Stand.Action = "Mimic"
+end) 
+
+Create("Save!", function ()
+    Stand.Action = "Save"
+end)
+
+Create("Stab!", function()
+    Stand.Action = "aura1"
+end)
+
+Create("Leave!", function() 
+    game:Shutdown()
+end)
+
+Create("Barrage!", function()
+    Stand.Action = "Barrage"
+end)
+
+Create('Aura!', function()
+    Stand.Action = "Aura"
+end)
